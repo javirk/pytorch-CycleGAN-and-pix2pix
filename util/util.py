@@ -4,9 +4,26 @@ import torch
 import numpy as np
 from PIL import Image
 import os
+from matplotlib import cm
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
-def tensor2im(input_image, imtype=np.uint8):
+def high_res_colormap(low_res_cmap, resolution=1000, max_value=1):
+    # Construct the list colormap, with interpolated values for higer resolution
+    # For a linear segmented colormap, you can just specify the number of point in
+    # cm.get_cmap(name, lutsize) with the parameter lutsize
+    x = np.linspace(0, 1, low_res_cmap.N)
+    low_res = low_res_cmap(x)
+    new_x = np.linspace(0, max_value, resolution)
+    high_res = np.stack([np.interp(new_x, x, low_res[:, i]) for i in range(low_res.shape[1])], axis=1)
+    return ListedColormap(high_res)
+
+
+COLORMAPS = {'magma': high_res_colormap(cm.get_cmap('magma')),
+             'bone': cm.get_cmap('bone', 10000)}
+
+
+def tensor2im(input_image, imtype=np.uint8, colormap=None):
     """"Converts a Tensor array into a numpy image array.
 
     Parameters:
@@ -20,8 +37,12 @@ def tensor2im(input_image, imtype=np.uint8):
             return input_image
         image_numpy = image_tensor[0].cpu().float().numpy()  # convert it into a numpy array
         if image_numpy.shape[0] == 1:  # grayscale to RGB
-            image_numpy = np.tile(image_numpy, (3, 1, 1))
-        image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
+            norm_array = (image_numpy[0] - image_numpy.min()) / (image_numpy.max() - image_numpy.min())
+            image_numpy = COLORMAPS[colormap](norm_array).astype(np.float32)
+            image_numpy = image_numpy[...,:3]
+            # image_numpy = np.tile(image_numpy, (3, 1, 1))
+        else:
+            image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
     else:  # if it is a numpy array, do nothing
         image_numpy = input_image
     return image_numpy.astype(imtype)

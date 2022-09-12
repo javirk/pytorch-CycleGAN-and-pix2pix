@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.1-base
+FROM nvidia/cuda:11.7.1-base-ubuntu20.04
 
 RUN apt update && apt install -y wget unzip curl bzip2 git
 RUN curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
