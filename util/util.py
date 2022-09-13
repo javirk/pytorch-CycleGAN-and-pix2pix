@@ -38,7 +38,7 @@ def tensor2im(input_image, imtype=np.uint8, colormap=None):
         image_numpy = image_tensor[0].cpu().float().numpy()  # convert it into a numpy array
         if image_numpy.shape[0] == 1:  # grayscale to RGB
             norm_array = (image_numpy[0] - image_numpy.min()) / (image_numpy.max() - image_numpy.min())
-            image_numpy = COLORMAPS[colormap](norm_array).astype(np.float32)
+            image_numpy = COLORMAPS[colormap](norm_array).astype(np.float32) * 255.
             image_numpy = image_numpy[...,:3]
             # image_numpy = np.tile(image_numpy, (3, 1, 1))
         else:

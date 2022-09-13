@@ -8,6 +8,6 @@ ENV PATH=/miniconda/bin:${PATH}
 RUN conda update -y conda
 
 RUN conda install -y pytorch torchvision -c pytorch
-RUN mkdir /workspace/ && cd /workspace/ && git clone hhttps://github.com/javirk/pytorch-CycleGAN-and-pix2pix.git && cd pytorch-CycleGAN-and-pix2pix && pip install -r requirements.txt
+RUN mkdir /workspace/ && cd /workspace/ && git clone https://github.com/javirk/pytorch-CycleGAN-and-pix2pix.git && cd pytorch-CycleGAN-and-pix2pix && pip install -r requirements.txt
 
 WORKDIR /workspace
