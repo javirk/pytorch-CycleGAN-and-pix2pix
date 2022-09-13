@@ -148,6 +148,10 @@ python test.py --dataroot ./datasets/facades --name facades_pix2pix --model pix2
 - The test results will be saved to a html file here: `./results/facades_pix2pix/test_latest/index.html`. You can find more scripts at `scripts` directory.
 - To train and test pix2pix-based colorization models, please add `--model colorization` and `--dataset_mode colorization`. See our training [tips](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/docs/tips.md#notes-on-colorization) for more details.
 
+For omniverse data, use:
+```bash
+python train.py --dataset_mode ov --dataroot ../datasets/omniverse --name ov_p2p --model pix2pix --direction AtoB --output_nc 1 --colormap magma
+```
 ### Apply a pre-trained model (CycleGAN)
 - You can download a pretrained model (e.g. horse2zebra) with the following script:
 ```bash
